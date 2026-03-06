@@ -1,70 +1,59 @@
-# Getting Started with Create React App
+# Valid Person Finder: OSINT Intelligence Pipeline
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is an automated Python and React application specialized in finding highly accurate contacts and executives at companies by executing zero-cost programmatic DuckDuckGo heuristic Intelligence (OSINT).
 
-## Available Scripts
+## Architecture
+1. **Frontend**: React interface with a single and batch-processing flow, visualizing confidence percentages, live intelligence logs, and export pipelines.
+2. **Backend**: Python FastAPI service utilizing `duckduckgo-search` to fetch real search engine snippets, perform Regular Expression Heuristic NLP, scrape deeper sites using BeautifulSoup, and cross-validate names with at least 2 independent sources before returning results.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Setup Instructions
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Environment Setup
+All API keys or confidential model names must be stored securely locally.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. **Create an Environment File**:
+   Copy `.env.example` into `.env` at the root folder:
+   ```bash
+   cp .env.example .env
+   ```
+2. **Configure your Variables**:
+   In the new `.env` file, ensure API variables (if you choose to pivot back to LLM integrations later) are set.
+   *Note: As of the latest update, the application relies purely on programmatic web scraping and heuristic rules to save API costs and prevent scraping blocks, rendering API keys optional, but environment configuration is still supported.*
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🏃 Running the Project Locally
 
-### `npm run build`
+### 1. Python Backend Service
+The backend is responsible for all OSINT gathering, scraping, and verification.
+1. Make sure you have python installed.
+2. Navigate into the folder, optionally create a virtual environment, and install pip requirements:
+    ```bash
+    python -m pip install -r backend/requirements.txt
+    ```
+3. Start the FastAPI development server:
+    ```bash
+    uvicorn backend.main:app --host localhost --port 8000 --reload
+    ```
+   *The backend will now be scraping and validating on `http://localhost:8000/api/search`.*
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 2. React Frontend Application
+The frontend consumes the FastAPI search endpoint.
+1. Install node dependencies:
+    ```bash
+    npm install
+    ```
+2. Start the React server:
+    ```bash
+    npm start
+    ```
+   *The frontend will open directly in `http://localhost:3000`.*
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🔍 Search & Cross-Validation Methodology
+- The backend generates 3 different semantic queries per searched Company/Title pair.
+- The tool extracts potential candidate names from LinkedIn Profile URLs, Wikipedia, Crunchbase, etc.
+- **Cross-Validation Layer**: The primary validation engine extracts an array of names from the data set. It then filters candidates ensuring their name physically surfaced on **at least two entirely independent source URLs/domains**. The candidate with the highest cross-domain verification is confirmed via JSON.

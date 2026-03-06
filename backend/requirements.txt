@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+duckduckgo-search
+python-dotenv
+pydantic
+beautifulsoup4
+requests
